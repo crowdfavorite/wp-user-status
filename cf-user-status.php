@@ -134,4 +134,9 @@ class CF_User_Status {
 
 }
 
+function cf_user_status_output() {
+	$cf_user_status = new CF_User_Status;
+	$cf_user_status->output_users
+}
+
 CF_User_Status::hooks();
