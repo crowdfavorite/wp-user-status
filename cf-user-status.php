@@ -23,6 +23,8 @@ License: GPLv2 or later
  * **********************************************************************
  */
 
+include_once( 'widget.php' );
+
 class CF_User_Status {
 
 	function __construct() {}
@@ -55,6 +57,11 @@ class CF_User_Status {
 	}
 
 	public static function set_users_activity( $activity_array ) {
+		/*
+		 * A single option is used instead of transients to prevent having to
+		 * make a database call per user, now its just one and processing is
+		 * done via php.
+		 */
 		return update_option( 'cf_users_activity', $activity_array );
 	}
 
@@ -115,17 +122,16 @@ class CF_User_Status {
 
 	function output_users() {
 		$users = $this->get_users();
-		$markup = '<ul>';
+		$markup = apply_filters( 'cf_user_activity_output_before', '<ul>' );
 		foreach ( $users as $user ) {
-			$online = $user->online  ? 'online' : 'offline';
-			$markup .= '<li>' . $user->user_nicename . ' ' . $online . '</li>';
+			$online = $user->online  ? 'Online' : 'Offline';
+			$row = '<li>' . esc_html( $user->display_name . ' ' . $online ) . '</li>';
+			$markup .= apply_filters( 'cf_user_activity_output_row', $row, $user );
 		}
-		$markup .= '</ul>';
+		$markup .= apply_filters( 'cf_user_activity_output_after', '</ul>' );
 		echo $markup;
 	}
 
 }
 
-$cf_users_status = new CF_User_Status;
-$cf_users_status->output_users();
 CF_User_Status::hooks();
