@@ -49,7 +49,7 @@ class CF_User_Status {
 
 	public static function user_idle_time() {
 		// Length of time a user can be idle and still be considered online
-		return apply_filters( 'cf_user_activity_idle_time', 60 * 10 );
+		return apply_filters( 'cf_user_status_idle_time', 60 * 10 );
 	}
 
 	public static function get_users_last_activity() {
@@ -122,13 +122,13 @@ class CF_User_Status {
 
 	function output_users() {
 		$users = $this->get_users();
-		$markup = apply_filters( 'cf_user_activity_output_before', '<ul>' );
+		$markup = apply_filters( 'cf_user_status_output_before', '<ul class="cf-user-status">' );
 		foreach ( $users as $user ) {
 			$online = $user->online  ? 'Online' : 'Offline';
 			$row = '<li>' . esc_html( $user->display_name . ' ' . $online ) . '</li>';
-			$markup .= apply_filters( 'cf_user_activity_output_row', $row, $user );
+			$markup .= apply_filters( 'cf_user_status_output_row', $row, $user );
 		}
-		$markup .= apply_filters( 'cf_user_activity_output_after', '</ul>' );
+		$markup .= apply_filters( 'cf_user_status_output_after', '</ul>' );
 		echo $markup;
 	}
 
