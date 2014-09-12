@@ -100,7 +100,7 @@ class CF_User_Status {
 		}
 
 		$user_query_args = apply_filters( cf_user_status_query_args, array(
-				'number' => false
+			'number' => false
 		) );
 
 		$users_query = new WP_User_Query( $user_query_args );
@@ -125,7 +125,7 @@ class CF_User_Status {
 		$markup = apply_filters( 'cf_user_status_output_before', '<ul class="cf-user-status">' );
 		foreach ( $users as $user ) {
 			$online = $user->online  ? 'Online' : 'Offline';
-			$row = '<li>' . esc_html( $user->display_name . ' ' . $online ) . '</li>';
+			$row = '<li>' . get_avatar( $user->ID, 34 ) . esc_html( $user->display_name . ' ' . $online ) . '</li>';
 			$markup .= apply_filters( 'cf_user_status_output_row', $row, $user );
 		}
 		$markup .= apply_filters( 'cf_user_status_output_after', '</ul>' );
