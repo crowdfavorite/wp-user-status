@@ -35,7 +35,7 @@ class CF_User_Status {
 		add_action( 'clear_auth_cookie', array( get_called_class(), 'logout' ) );
 	}
 
-	public static function update_activity( $user_id = null, $time_override = null) {
+	public static function update_activity( $user_id = null, $time_override = null ) {
 		if ( ! $user_id ) {
 			$user_id = get_current_user_id();
 		}
