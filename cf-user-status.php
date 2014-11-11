@@ -31,14 +31,23 @@ class CF_User_Status {
 
 	public static function hooks() {
 		add_action( 'init', array( get_called_class(), 'update_activity' ) );
+		// This fires right as the user is being "logged out" the wp_logout hook does not return a user id.
+		add_action( 'clear_auth_cookie', array( get_called_class(), 'logout' ) );
 	}
 
-	public static function update_activity( $user_id ) {
-		$user_id = get_current_user_id();
+	public static function update_activity( $user_id = null, $time_override = null) {
+		if ( ! $user_id ) {
+			$user_id = get_current_user_id();
+		}
 		if ( $user_id ) {
 			$users_activity = self::get_users_last_activity();
 			if ( is_array( $users_activity ) ) {
-				$users_activity[ $user_id ] = time();
+				if ( null !== $time_override ) {
+					$users_activity[ $user_id ] = $time_override;
+				}
+				else {
+					$users_activity[ $user_id ] = time();
+				}
 				self::set_users_activity( $users_activity );
 			}
 			else {
@@ -130,6 +139,11 @@ class CF_User_Status {
 		}
 		$markup .= apply_filters( 'cf_user_status_output_after', '</ul>' );
 		echo $markup;
+	}
+
+	function logout() {
+		$user_id = get_current_user_id();
+		self::update_activity( $user_id, 0 );
 	}
 
 }
